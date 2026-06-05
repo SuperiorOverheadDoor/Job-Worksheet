@@ -827,10 +827,10 @@
 
   <!-- BOTTOM ACTIONS -->
   <div class="bottom-actions">
-    <a class="save-pdf-btn" id="preview-btn" href="#" role="button">
+    <button class="save-pdf-btn" onclick="window.print()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       Save as PDF
-    </a>
+    </button>
   </div>
 
 </div><!-- end page -->
@@ -841,70 +841,23 @@
 
   let doorCount = 1;
 
+  // Save as PDF button
+  document.getElementById('preview-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.print();
+  });
+
   function setJobType(btn) {
     document.querySelectorAll('.job-type-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
   }
 
-  // Wire job type buttons for mobile
   document.querySelectorAll('.job-type-btn').forEach(function(btn) {
     btn.addEventListener('click', function() { setJobType(this); });
   });
 
-  // Preview button — both click and touchend for mobile
-  var previewBtn = document.getElementById('preview-btn');
-  previewBtn.addEventListener('click', function() { openPreview(); });
-  previewBtn.addEventListener('touchend', function(e) { e.preventDefault(); openPreview(); });
-
-  // Close preview button
-  var closeBtn = document.getElementById('close-preview-btn');
-  closeBtn.addEventListener('click', function() { closePreview(); });
-  closeBtn.addEventListener('touchend', function(e) { e.preventDefault(); closePreview(); });
-
-  // Print/Save button
-  var printBtn = document.getElementById('print-btn');
-  printBtn.addEventListener('click', function() { window.print(); });
-  printBtn.addEventListener('touchend', function(e) { e.preventDefault(); window.print(); });
-
-  // Close modal on backdrop tap
-  document.getElementById('preview-modal').addEventListener('click', function(e) {
-    if (e.target === this) closePreview();
-  });
-
-  function openPreview() {
-    var modal = document.getElementById('preview-modal');
-    var content = document.getElementById('preview-content');
-    var original = document.querySelector('.page');
-    var clone = original.cloneNode(true);
-
-    // Remove interactive-only elements from clone
-    clone.querySelectorAll('.bottom-actions, .add-door-btn, .remove-door-btn, .photo-upload-btn, #photo-input').forEach(function(el) { el.remove(); });
-
-    // Copy current input/select/textarea values into clone
-    var origInputs = original.querySelectorAll('input, select, textarea');
-    var cloneInputs = clone.querySelectorAll('input, select, textarea');
-    origInputs.forEach(function(el, i) {
-      if (el.tagName === 'SELECT') cloneInputs[i].value = el.value;
-      else if (el.type === 'checkbox') cloneInputs[i].checked = el.checked;
-      else cloneInputs[i].value = el.value;
-      cloneInputs[i].disabled = true;
-    });
-
-    // Copy photos
-    var origGrid = original.querySelector('#photo-grid');
-    var cloneGrid = clone.querySelector('#photo-grid');
-    if (origGrid && cloneGrid) cloneGrid.innerHTML = origGrid.innerHTML;
-
-    content.innerHTML = '';
-    content.appendChild(clone);
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closePreview() {
-    document.getElementById('preview-modal').style.display = 'none';
-    document.body.style.overflow = '';
-  }
+  // Add Another Door button
+  document.querySelector('.add-door-btn').addEventListener('click', function() { addDoor(); });
 
   function addDoor() {
     doorCount++;
@@ -912,10 +865,11 @@
     var block = document.createElement('div');
     block.className = 'door-block';
     block.id = 'door-' + doorCount;
+    var id = doorCount;
     block.innerHTML = `
       <div class="door-block-header">
-        <span class="door-block-title">Door ${doorCount}</span>
-        <button class="remove-door-btn" id="remove-${doorCount}">Remove</button>
+        <span class="door-block-title">Door ${id}</span>
+        <button class="remove-door-btn" id="remove-${id}">Remove</button>
       </div>
       <div class="door-block-body">
         <div class="section">
@@ -984,43 +938,38 @@
       </div>
     `;
     container.appendChild(block);
-
-    // Wire remove button with addEventListener
-    var removeBtn = document.getElementById('remove-' + doorCount);
-    var doorId = 'door-' + doorCount;
-    removeBtn.addEventListener('click', function() { removeDoor(doorId); });
-    removeBtn.addEventListener('touchend', function(e) { e.preventDefault(); removeDoor(doorId); });
-
+    document.getElementById('remove-' + id).addEventListener('click', function() {
+      document.getElementById('door-' + id).remove();
+    });
     block.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // Wire the Add Another Door button
-  var addDoorBtn = document.querySelector('.add-door-btn');
-  addDoorBtn.addEventListener('click', function() { addDoor(); });
-  addDoorBtn.addEventListener('touchend', function(e) { e.preventDefault(); addDoor(); });
-
-  function handlePhotos(input) {
+  // Photo upload
+  var photoInput = document.getElementById('photo-input');
+  document.getElementById('photo-upload-btn').addEventListener('click', function() { photoInput.click(); });
+  photoInput.addEventListener('change', function() {
     var grid = document.getElementById('photo-grid');
-    Array.from(input.files).forEach(function(file) {
+    Array.from(this.files).forEach(function(file) {
       var reader = new FileReader();
       reader.onload = function(e) {
         var thumb = document.createElement('div');
         thumb.className = 'photo-thumb';
-        thumb.innerHTML = '<img src="' + e.target.result + '" alt="Job photo"><button class="remove-photo" title="Remove">&#x2715;</button>';
-        thumb.querySelector('.remove-photo').addEventListener('click', function() { thumb.remove(); });
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Job photo';
+        var btn = document.createElement('button');
+        btn.className = 'remove-photo';
+        btn.title = 'Remove';
+        btn.innerHTML = '&#x2715;';
+        btn.addEventListener('click', function() { thumb.remove(); });
+        thumb.appendChild(img);
+        thumb.appendChild(btn);
         grid.appendChild(thumb);
       };
       reader.readAsDataURL(file);
     });
-    input.value = '';
-  }
-
-  // Wire photo input
-  var photoInput = document.getElementById('photo-input');
-  var photoUploadBtn = document.querySelector('.photo-upload-btn');
-  photoUploadBtn.addEventListener('click', function() { photoInput.click(); });
-  photoUploadBtn.addEventListener('touchend', function(e) { e.preventDefault(); photoInput.click(); });
-  photoInput.addEventListener('change', function() { handlePhotos(this); });
+    photoInput.value = '';
+  });
 
   function removeDoor(id) {
     var el = document.getElementById(id);
