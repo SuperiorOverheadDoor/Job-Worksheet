@@ -472,68 +472,40 @@
   }
 
   @media print {
-    @page { size: A4 portrait; margin: 8mm; }
-    body { background: white; padding: 0; font-size: 9px; }
-    .page { box-shadow: none; padding: 6px 10px; max-width: 100%; border-top-width: 3px; }
+    @page { size: A4 portrait; margin: 4mm; }
+    html, body { height: 100%; margin: 0; padding: 0; background: white; }
 
-    /* Hide interactive elements */
-    .add-door-btn { display: none !important; }
+    /* Scale the entire page down to fit — adjust the scale value if needed */
+    body {
+      transform: scale(0.62);
+      transform-origin: top left;
+      width: calc(100% / 0.62);
+    }
+
+    /* Hide interactive / non-print elements */
+    .add-door-btn    { display: none !important; }
     .remove-door-btn { display: none !important; }
-    .bottom-actions { display: none !important; }
-    .photo-upload-btn { display: none !important; }
-    .photo-section { display: none !important; }
-    .job-type-btn { font-size: 8px; padding: 2px 7px; }
+    .bottom-actions  { display: none !important; }
+    .photo-section   { display: none !important; }
+    .job-type-row    { display: none !important; }
 
-    /* Shrink header */
-    .header { padding-bottom: 5px; margin-bottom: 6px; }
-    .header-left h1 { font-size: 15px; letter-spacing: 1px; }
-    .header-left p { font-size: 8px; }
-    .header-date-input { font-size: 11px; }
-    .header-date-label { font-size: 8px; }
+    .page {
+      box-shadow: none;
+      padding: 14px 18px;
+      max-width: 100%;
+      border-top-width: 3px;
+    }
 
-    /* Job type row */
-    .job-type-row { margin-bottom: 6px; gap: 4px; }
-
-    /* WO bar */
-    .wo-bar { padding: 6px 10px; margin-bottom: 6px; }
-    .wo-bar-item label { font-size: 8px; }
-    .wo-bar-item input { font-size: 11px; padding: 3px 6px; }
-
-    /* Customer card */
-    .job-info-card { padding: 6px 10px; gap: 5px; margin-bottom: 8px; }
-    .job-info-card .info-row label { font-size: 8px; margin-bottom: 2px; }
-    .job-info-card .info-row input { font-size: 10px; padding: 3px 5px; background: white !important; border-color: #aaa !important; }
-
-    /* Sections */
-    .section { margin-bottom: 6px; }
-    .section-title { font-size: 8px; padding: 3px 8px; margin-bottom: 5px; letter-spacing: 1px; }
-
-    /* Fields */
-    .fields-grid { gap: 4px 12px; padding: 0 2px; }
-    .field-group label { font-size: 7.5px; margin-bottom: 1px; letter-spacing: 0.3px; }
+    /* Fields readable but compact */
     .field-group input,
     .field-group select,
     .field-group textarea {
-      font-size: 10px !important;
-      padding: 3px 5px !important;
       background: white !important;
       border-color: #bbb !important;
     }
-    .field-group textarea { height: 28px; }
-
-    /* Door block */
-    .door-block { margin-bottom: 8px; }
-    .door-block-header { padding: 4px 10px; }
-    .door-block-title { font-size: 10px; }
-    .door-block-body { padding: 6px 8px; }
-
-    /* Notes */
-    .notes-area { min-height: 36px; font-size: 10px !important; padding: 4px 6px !important; background: white !important; border-color: #aaa !important; }
-
-    /* Sig row */
-    .sig-row { margin-top: 6px; padding-top: 6px; gap: 10px; }
-    .sig-row .field-group label { font-size: 8px; }
-    .sig-row .field-group input { font-size: 10px !important; }
+    .job-info-card .info-row input { background: white !important; border-color: #bbb !important; }
+    .wo-bar-item input { background: rgba(255,255,255,0.15) !important; }
+    .notes-area { background: white !important; border-color: #aaa !important; min-height: 40px; }
   }
 </style>
 </head>
@@ -595,7 +567,7 @@
 
   <!-- TECH INFO -->
   <div class="section">
-    <div class="section-title">&#9654; Tech Information</div>
+    <div class="section-title">Tech Information</div>
     <div class="fields-grid">
       <div class="field-group">
         <label>Tech Name</label>
@@ -625,7 +597,7 @@
 
         <!-- Door Details -->
         <div class="section">
-          <div class="section-title">&#9654; Door Details</div>
+          <div class="section-title">Door Details</div>
           <div class="fields-grid">
             <div class="field-group">
               <label>Door Model</label>
@@ -644,7 +616,7 @@
 
         <!-- Opening Measurements -->
         <div class="section">
-          <div class="section-title">&#9654; Opening Measurements</div>
+          <div class="section-title">Opening Measurements</div>
           <div class="fields-grid">
             <div class="field-group">
               <label>Opening Width</label>
@@ -691,7 +663,7 @@
 
         <!-- Track & Hardware -->
         <div class="section">
-          <div class="section-title">&#9654; Track &amp; Hardware</div>
+          <div class="section-title">Track &amp; Hardware</div>
           <div class="fields-grid">
             <div class="field-group">
               <label>Type of Track</label>
@@ -754,7 +726,7 @@
 
         <!-- Operator & Power -->
         <div class="section">
-          <div class="section-title">&#9654; Operator &amp; Power</div>
+          <div class="section-title">Operator &amp; Power</div>
           <div class="fields-grid">
             <div class="field-group">
               <label>Operator Type &amp; Size</label>
@@ -781,7 +753,7 @@
 
         <!-- Weatherseal & Trim -->
         <div class="section">
-          <div class="section-title">&#9654; Weatherseal &amp; Trim</div>
+          <div class="section-title">Weatherseal &amp; Trim</div>
           <div class="fields-grid">
             <div class="field-group">
               <label>Weatherseal</label>
@@ -800,7 +772,7 @@
 
         <!-- Obstructions -->
         <div class="section" style="margin-bottom:0;">
-          <div class="section-title">&#9654; Obstructions</div>
+          <div class="section-title">Obstructions</div>
           <div class="fields-grid one-col">
             <div class="field-group">
               <input type="text" placeholder="Describe any obstructions in the opening or ceiling area">
@@ -819,7 +791,7 @@
 
   <!-- PHOTO SECTION -->
   <div class="section photo-section">
-    <div class="section-title">&#9654; Job Site Photos</div>
+    <div class="section-title">Job Site Photos</div>
     <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
     <button class="photo-upload-btn" onclick="document.getElementById('photo-input').click()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -830,7 +802,7 @@
 
   <!-- GENERAL NOTES -->
   <div class="section">
-    <div class="section-title">&#9654; General Notes / Special Instructions</div>
+    <div class="section-title">General Notes / Special Instructions</div>
     <textarea class="notes-area" placeholder="Enter any additional notes, special instructions, or job-specific details here..."></textarea>
   </div>
 
@@ -884,7 +856,7 @@
       </div>
       <div class="door-block-body">
         <div class="section">
-          <div class="section-title">&#9654; Door Details</div>
+          <div class="section-title">Door Details</div>
           <div class="fields-grid">
             <div class="field-group"><label>Door Model</label><input type="text"></div>
             <div class="field-group"><label>Color</label><input type="text"></div>
@@ -892,7 +864,7 @@
           </div>
         </div>
         <div class="section">
-          <div class="section-title">&#9654; Opening Measurements</div>
+          <div class="section-title">Opening Measurements</div>
           <div class="fields-grid">
             <div class="field-group"><label>Opening Width</label><input type="text"></div>
             <div class="field-group"><label>Opening Height</label><input type="text"></div>
@@ -907,7 +879,7 @@
           </div>
         </div>
         <div class="section">
-          <div class="section-title">&#9654; Track &amp; Hardware</div>
+          <div class="section-title">Track &amp; Hardware</div>
           <div class="fields-grid">
             <div class="field-group"><label>Type of Track</label>
               <select><option value="">Select</option><option>Bracket</option><option>Reverse Angle</option><option>Full Angle</option></select></div>
@@ -923,7 +895,7 @@
           </div>
         </div>
         <div class="section">
-          <div class="section-title">&#9654; Operator &amp; Power</div>
+          <div class="section-title">Operator &amp; Power</div>
           <div class="fields-grid">
             <div class="field-group"><label>Operator Type &amp; Size</label><input type="text"></div>
             <div class="field-group"><label>Power</label>
@@ -933,7 +905,7 @@
           </div>
         </div>
         <div class="section">
-          <div class="section-title">&#9654; Weatherseal &amp; Trim</div>
+          <div class="section-title">Weatherseal &amp; Trim</div>
           <div class="fields-grid">
             <div class="field-group"><label>Weatherseal</label>
               <select><option value="">Select</option><option>90°</option><option>45°</option></select></div>
@@ -941,7 +913,7 @@
           </div>
         </div>
         <div class="section" style="margin-bottom:0;">
-          <div class="section-title">&#9654; Obstructions</div>
+          <div class="section-title">Obstructions</div>
           <div class="fields-grid one-col">
             <div class="field-group"><input type="text" placeholder="Describe any obstructions in the opening or ceiling area"></div>
           </div>
