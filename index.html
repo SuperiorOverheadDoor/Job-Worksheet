@@ -224,7 +224,7 @@
     gap: 10px;
   }
   .save-pdf-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
     font-family: 'Oswald', sans-serif;
@@ -232,19 +232,16 @@
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    text-decoration: none;
     color: white;
     background: var(--primary);
     border: none;
     border-radius: 4px;
-    padding: 14px 28px;
+    padding: 11px 24px;
     cursor: pointer;
     transition: background 0.15s;
     box-shadow: 0 2px 8px rgba(26,43,74,0.25);
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-    touch-action: manipulation;
   }
-  .save-pdf-btn:hover, .save-pdf-btn:active { background: #0f1d36; }
+  .save-pdf-btn:hover { background: #0f1d36; }
   @media print {
     .bottom-actions { display: none; }
   }
@@ -475,45 +472,167 @@
   }
 
   @media print {
-    @page { size: A4 portrait; margin: 4mm; }
-    html, body { height: 100%; margin: 0; padding: 0; background: white; }
+    @page { size: A4 portrait; margin: 6mm 8mm; }
+    html, body { margin: 0; padding: 0; background: white; }
 
-    /* Scale the entire page down to fit — adjust the scale value if needed */
-    body {
-      transform: scale(0.62);
-      transform-origin: top left;
-      width: calc(100% / 0.62);
-    }
-
-    /* Hide interactive / non-print elements */
+    /* Hide interactive elements */
     .add-door-btn    { display: none !important; }
     .remove-door-btn { display: none !important; }
     .bottom-actions  { display: none !important; }
     .photo-section   { display: none !important; }
     .job-type-row    { display: none !important; }
+    .wo-bar          { display: none !important; }
 
     .page {
       box-shadow: none;
-      padding: 14px 18px;
+      padding: 8px 10px;
       max-width: 100%;
-      border-top-width: 3px;
+      border-top: 3px solid #1a2b4a;
     }
 
-    /* Fields readable but compact */
+    /* ── PRINT HEADER: invoice style, customer left / WO+date right ── */
+    .header { display: none !important; }
+
+    .print-header {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #1a2b4a;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .print-header-left h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      color: #1a2b4a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .print-header-left .cust-line {
+      font-size: 9px;
+      color: #334;
+      margin-bottom: 1px;
+    }
+    .print-header-left .cust-line span {
+      font-weight: 700;
+      color: #111;
+    }
+    .print-header-right {
+      text-align: right;
+      font-size: 9px;
+      color: #334;
+    }
+    .print-header-right .wo-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a2b4a;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Hide the on-screen customer card & job info */
+    .job-info-card { display: none !important; }
+
+    /* Tech info compact */
+    .section { margin-bottom: 5px; }
+    .section-title {
+      font-size: 7px;
+      padding: 2px 6px;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    /* ── 2-COLUMN DOOR LAYOUT ── */
+    #door-blocks-container {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .door-block {
+      border: 1px solid #b0bdd0;
+      border-radius: 3px;
+      margin-bottom: 0;
+      break-inside: avoid;
+    }
+    .door-block-header {
+      padding: 3px 8px;
+    }
+    .door-block-title { font-size: 9px; }
+    .door-block-body { padding: 5px 7px; }
+
+    /* Fields — 2 col inside each door block */
+    .fields-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3px 8px;
+      padding: 0;
+    }
+    .fields-grid.one-col { grid-template-columns: 1fr; }
+
+    .field-group label {
+      font-size: 6.5px;
+      margin-bottom: 1px;
+      letter-spacing: 0.2px;
+    }
     .field-group input,
     .field-group select,
     .field-group textarea {
+      font-size: 8px !important;
+      padding: 2px 4px !important;
       background: white !important;
-      border-color: #bbb !important;
+      border: 0.5px solid #bbb !important;
+      border-radius: 2px !important;
     }
-    .job-info-card .info-row input { background: white !important; border-color: #bbb !important; }
-    .wo-bar-item input { background: rgba(255,255,255,0.15) !important; }
-    .notes-area { background: white !important; border-color: #aaa !important; min-height: 40px; }
+    .field-group textarea { height: 20px; }
+
+    /* Tech section compact single row */
+    #door-blocks-container ~ .section .fields-grid,
+    .page > .section .fields-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Sig row */
+    .sig-row {
+      margin-top: 6px;
+      padding-top: 5px;
+      gap: 10px;
+    }
+    .sig-row .field-group label { font-size: 7px; }
+    .sig-row .field-group input { font-size: 9px !important; }
+
+    /* Notes */
+    .notes-area {
+      min-height: 28px;
+      font-size: 8px !important;
+      padding: 3px 5px !important;
+      background: white !important;
+      border: 0.5px solid #aaa !important;
+    }
   }
+
+  /* Print header — hidden on screen */
+  .print-header { display: none; }
 </style>
 </head>
 <body>
 <div class="page">
+
+  <!-- PRINT-ONLY INVOICE HEADER -->
+  <div class="print-header">
+    <div class="print-header-left">
+      <h2>Job Measuring Worksheet</h2>
+      <div class="cust-line" id="print-name"></div>
+      <div class="cust-line" id="print-address"></div>
+      <div class="cust-line" id="print-cityphonerow"></div>
+    </div>
+    <div class="print-header-right">
+      <span class="wo-num" id="print-wo"></span>
+      <span id="print-date"></span>
+    </div>
+  </div>
 
   <!-- HEADER -->
   <div class="header">
@@ -840,12 +959,6 @@
   document.getElementById('job-date').value = new Date().toISOString().split('T')[0];
 
   let doorCount = 1;
-
-  // Save as PDF button
-  document.getElementById('preview-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    window.print();
-  });
 
   function setJobType(btn) {
     document.querySelectorAll('.job-type-btn').forEach(function(b) { b.classList.remove('active'); });
