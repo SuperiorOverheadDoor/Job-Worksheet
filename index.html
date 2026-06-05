@@ -792,8 +792,8 @@
   <!-- PHOTO SECTION -->
   <div class="section photo-section">
     <div class="section-title">Job Site Photos</div>
-    <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
-    <button class="photo-upload-btn" onclick="document.getElementById('photo-input').click()">
+    <input type="file" id="photo-input" accept="image/*" multiple style="display:none">
+    <button class="photo-upload-btn" id="photo-upload-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       Add Photos
     </button>
@@ -824,7 +824,7 @@
 
   <!-- BOTTOM ACTIONS -->
   <div class="bottom-actions">
-    <button class="save-pdf-btn" onclick="openPreview()">
+    <button class="save-pdf-btn" id="preview-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       Preview &amp; Save PDF
     </button>
@@ -840,8 +840,8 @@
     <div id="preview-toolbar" style="display:flex; align-items:center; justify-content:space-between; background:#1a2b4a; border-radius:6px 6px 0 0; padding:12px 18px; position:sticky; top:0; z-index:10;">
       <span style="font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:2px; text-transform:uppercase; color:#e8a020;">Form Preview</span>
       <div style="display:flex; gap:10px;">
-        <button onclick="closePreview()" style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:1px; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,0.3); color:#cdd; padding:7px 16px; border-radius:3px; cursor:pointer;">✕ Close</button>
-        <button onclick="window.print()" style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; background:#e8a020; border:none; color:#1a2b4a; font-weight:700; padding:7px 20px; border-radius:3px; cursor:pointer;">⬇ Save as PDF</button>
+        <button id="close-preview-btn" style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:1px; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,0.3); color:#cdd; padding:7px 16px; border-radius:3px; cursor:pointer;">✕ Close</button>
+        <button id="print-btn" style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; background:#e8a020; border:none; color:#1a2b4a; font-weight:700; padding:7px 20px; border-radius:3px; cursor:pointer;">⬇ Save as PDF</button>
       </div>
     </div>
 
@@ -858,20 +858,80 @@
   let doorCount = 1;
 
   function setJobType(btn) {
-    document.querySelectorAll('.job-type-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.job-type-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
+  }
+
+  // Wire job type buttons for mobile
+  document.querySelectorAll('.job-type-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { setJobType(this); });
+  });
+
+  // Preview button — both click and touchend for mobile
+  var previewBtn = document.getElementById('preview-btn');
+  previewBtn.addEventListener('click', function() { openPreview(); });
+  previewBtn.addEventListener('touchend', function(e) { e.preventDefault(); openPreview(); });
+
+  // Close preview button
+  var closeBtn = document.getElementById('close-preview-btn');
+  closeBtn.addEventListener('click', function() { closePreview(); });
+  closeBtn.addEventListener('touchend', function(e) { e.preventDefault(); closePreview(); });
+
+  // Print/Save button
+  var printBtn = document.getElementById('print-btn');
+  printBtn.addEventListener('click', function() { window.print(); });
+  printBtn.addEventListener('touchend', function(e) { e.preventDefault(); window.print(); });
+
+  // Close modal on backdrop tap
+  document.getElementById('preview-modal').addEventListener('click', function(e) {
+    if (e.target === this) closePreview();
+  });
+
+  function openPreview() {
+    var modal = document.getElementById('preview-modal');
+    var content = document.getElementById('preview-content');
+    var original = document.querySelector('.page');
+    var clone = original.cloneNode(true);
+
+    // Remove interactive-only elements from clone
+    clone.querySelectorAll('.bottom-actions, .add-door-btn, .remove-door-btn, .photo-upload-btn, #photo-input').forEach(function(el) { el.remove(); });
+
+    // Copy current input/select/textarea values into clone
+    var origInputs = original.querySelectorAll('input, select, textarea');
+    var cloneInputs = clone.querySelectorAll('input, select, textarea');
+    origInputs.forEach(function(el, i) {
+      if (el.tagName === 'SELECT') cloneInputs[i].value = el.value;
+      else if (el.type === 'checkbox') cloneInputs[i].checked = el.checked;
+      else cloneInputs[i].value = el.value;
+      cloneInputs[i].disabled = true;
+    });
+
+    // Copy photos
+    var origGrid = original.querySelector('#photo-grid');
+    var cloneGrid = clone.querySelector('#photo-grid');
+    if (origGrid && cloneGrid) cloneGrid.innerHTML = origGrid.innerHTML;
+
+    content.innerHTML = '';
+    content.appendChild(clone);
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePreview() {
+    document.getElementById('preview-modal').style.display = 'none';
+    document.body.style.overflow = '';
   }
 
   function addDoor() {
     doorCount++;
-    const container = document.getElementById('door-blocks-container');
-    const block = document.createElement('div');
+    var container = document.getElementById('door-blocks-container');
+    var block = document.createElement('div');
     block.className = 'door-block';
     block.id = 'door-' + doorCount;
     block.innerHTML = `
       <div class="door-block-header">
         <span class="door-block-title">Door ${doorCount}</span>
-        <button class="remove-door-btn" onclick="removeDoor('door-${doorCount}')">Remove</button>
+        <button class="remove-door-btn" id="remove-${doorCount}">Remove</button>
       </div>
       <div class="door-block-body">
         <div class="section">
@@ -940,20 +1000,30 @@
       </div>
     `;
     container.appendChild(block);
+
+    // Wire remove button with addEventListener
+    var removeBtn = document.getElementById('remove-' + doorCount);
+    var doorId = 'door-' + doorCount;
+    removeBtn.addEventListener('click', function() { removeDoor(doorId); });
+    removeBtn.addEventListener('touchend', function(e) { e.preventDefault(); removeDoor(doorId); });
+
     block.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Wire the Add Another Door button
+  var addDoorBtn = document.querySelector('.add-door-btn');
+  addDoorBtn.addEventListener('click', function() { addDoor(); });
+  addDoorBtn.addEventListener('touchend', function(e) { e.preventDefault(); addDoor(); });
+
   function handlePhotos(input) {
-    const grid = document.getElementById('photo-grid');
-    Array.from(input.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const thumb = document.createElement('div');
+    var grid = document.getElementById('photo-grid');
+    Array.from(input.files).forEach(function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var thumb = document.createElement('div');
         thumb.className = 'photo-thumb';
-        thumb.innerHTML = `
-          <img src="${e.target.result}" alt="Job photo">
-          <button class="remove-photo" onclick="this.parentElement.remove()" title="Remove">&#x2715;</button>
-        `;
+        thumb.innerHTML = '<img src="' + e.target.result + '" alt="Job photo"><button class="remove-photo" title="Remove">&#x2715;</button>';
+        thumb.querySelector('.remove-photo').addEventListener('click', function() { thumb.remove(); });
         grid.appendChild(thumb);
       };
       reader.readAsDataURL(file);
@@ -961,8 +1031,15 @@
     input.value = '';
   }
 
+  // Wire photo input
+  var photoInput = document.getElementById('photo-input');
+  var photoUploadBtn = document.querySelector('.photo-upload-btn');
+  photoUploadBtn.addEventListener('click', function() { photoInput.click(); });
+  photoUploadBtn.addEventListener('touchend', function(e) { e.preventDefault(); photoInput.click(); });
+  photoInput.addEventListener('change', function() { handlePhotos(this); });
+
   function removeDoor(id) {
-    const el = document.getElementById(id);
+    var el = document.getElementById(id);
     if (el) el.remove();
   }
 </script>
