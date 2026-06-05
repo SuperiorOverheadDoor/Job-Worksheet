@@ -472,19 +472,68 @@
   }
 
   @media print {
-    body { background: white; padding: 0; }
-    .page { box-shadow: none; padding: 20px 28px; }
-    .add-door-btn { display: none; }
-    .remove-door-btn { display: none; }
-    .bottom-actions { display: none; }
-    .photo-upload-btn { display: none; }
-    .photo-thumb .remove-photo { display: none; }
-    .field-group input, .field-group select, .field-group textarea {
+    @page { size: A4 portrait; margin: 8mm; }
+    body { background: white; padding: 0; font-size: 9px; }
+    .page { box-shadow: none; padding: 6px 10px; max-width: 100%; border-top-width: 3px; }
+
+    /* Hide interactive elements */
+    .add-door-btn { display: none !important; }
+    .remove-door-btn { display: none !important; }
+    .bottom-actions { display: none !important; }
+    .photo-upload-btn { display: none !important; }
+    .photo-section { display: none !important; }
+    .job-type-btn { font-size: 8px; padding: 2px 7px; }
+
+    /* Shrink header */
+    .header { padding-bottom: 5px; margin-bottom: 6px; }
+    .header-left h1 { font-size: 15px; letter-spacing: 1px; }
+    .header-left p { font-size: 8px; }
+    .header-date-input { font-size: 11px; }
+    .header-date-label { font-size: 8px; }
+
+    /* Job type row */
+    .job-type-row { margin-bottom: 6px; gap: 4px; }
+
+    /* WO bar */
+    .wo-bar { padding: 6px 10px; margin-bottom: 6px; }
+    .wo-bar-item label { font-size: 8px; }
+    .wo-bar-item input { font-size: 11px; padding: 3px 6px; }
+
+    /* Customer card */
+    .job-info-card { padding: 6px 10px; gap: 5px; margin-bottom: 8px; }
+    .job-info-card .info-row label { font-size: 8px; margin-bottom: 2px; }
+    .job-info-card .info-row input { font-size: 10px; padding: 3px 5px; background: white !important; border-color: #aaa !important; }
+
+    /* Sections */
+    .section { margin-bottom: 6px; }
+    .section-title { font-size: 8px; padding: 3px 8px; margin-bottom: 5px; letter-spacing: 1px; }
+
+    /* Fields */
+    .fields-grid { gap: 4px 12px; padding: 0 2px; }
+    .field-group label { font-size: 7.5px; margin-bottom: 1px; letter-spacing: 0.3px; }
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      font-size: 10px !important;
+      padding: 3px 5px !important;
       background: white !important;
-      border-color: #aaa !important;
+      border-color: #bbb !important;
     }
-    .job-info-left .info-row input { background: transparent !important; color: white !important; }
-    .job-info-right .info-row input { background: white !important; }
+    .field-group textarea { height: 28px; }
+
+    /* Door block */
+    .door-block { margin-bottom: 8px; }
+    .door-block-header { padding: 4px 10px; }
+    .door-block-title { font-size: 10px; }
+    .door-block-body { padding: 6px 8px; }
+
+    /* Notes */
+    .notes-area { min-height: 36px; font-size: 10px !important; padding: 4px 6px !important; background: white !important; border-color: #aaa !important; }
+
+    /* Sig row */
+    .sig-row { margin-top: 6px; padding-top: 6px; gap: 10px; }
+    .sig-row .field-group label { font-size: 8px; }
+    .sig-row .field-group input { font-size: 10px !important; }
   }
 </style>
 </head>
