@@ -544,6 +544,15 @@
       letter-spacing: 1px;
     }
 
+    /* ── 2-COLUMN INSIDE EACH DOOR BLOCK ── */
+    .door-col-layout {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 8px;
+      align-items: start;
+    }
+    .door-col-left, .door-col-right { min-width: 0; }
+
     /* ── 2-COLUMN DOOR LAYOUT ── */
     #door-blocks-container {
       display: grid !important;
@@ -716,6 +725,8 @@
         <span class="door-block-title">Door 1</span>
       </div>
       <div class="door-block-body">
+        <div class="door-col-layout">
+        <div class="door-col-left">
 
         <!-- Door Details -->
         <div class="section">
@@ -782,6 +793,9 @@
             </div>
           </div>
         </div>
+
+        </div><!-- end door-col-left -->
+        <div class="door-col-right">
 
         <!-- Track & Hardware -->
         <div class="section">
@@ -902,6 +916,8 @@
           </div>
         </div>
 
+        </div><!-- end door-col-right -->
+        </div><!-- end door-col-layout -->
       </div><!-- end door-block-body -->
     </div><!-- end door-1 -->
   </div><!-- end door-blocks-container -->
@@ -958,6 +974,23 @@
   // Auto-populate today's date
   document.getElementById('job-date').value = new Date().toISOString().split('T')[0];
 
+  // Populate print header before printing
+  window.addEventListener('beforeprint', function() {
+    var inputs = document.querySelectorAll('.job-info-card .info-row input');
+    var custName    = inputs[0] ? inputs[0].value : '';
+    var address     = inputs[1] ? inputs[1].value : '';
+    var cityzip     = inputs[2] ? inputs[2].value : '';
+    var phone       = inputs[3] ? inputs[3].value : '';
+    var wo          = document.querySelector('.wo-bar-item input') ? document.querySelector('.wo-bar-item input').value : '';
+    var date        = document.getElementById('job-date') ? document.getElementById('job-date').value : '';
+
+    document.getElementById('print-name').innerHTML    = custName ? '<span>' + custName + '</span>' : '';
+    document.getElementById('print-address').innerHTML = address  ? address : '';
+    document.getElementById('print-cityphonerow').innerHTML = [cityzip, phone].filter(Boolean).join(' &nbsp;|&nbsp; ');
+    document.getElementById('print-wo').textContent   = wo   ? 'WO# ' + wo : '';
+    document.getElementById('print-date').textContent = date ? date : '';
+  });
+
   let doorCount = 1;
 
   function setJobType(btn) {
@@ -985,6 +1018,8 @@
         <button class="remove-door-btn" id="remove-${id}">Remove</button>
       </div>
       <div class="door-block-body">
+        <div class="door-col-layout">
+        <div class="door-col-left">
         <div class="section">
           <div class="section-title">Door Details</div>
           <div class="fields-grid">
@@ -1008,6 +1043,8 @@
               <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
           </div>
         </div>
+        </div>
+        <div class="door-col-right">
         <div class="section">
           <div class="section-title">Track &amp; Hardware</div>
           <div class="fields-grid">
@@ -1047,6 +1084,8 @@
           <div class="fields-grid one-col">
             <div class="field-group"><input type="text" placeholder="Describe any obstructions in the opening or ceiling area"></div>
           </div>
+        </div>
+        </div>
         </div>
       </div>
     `;
