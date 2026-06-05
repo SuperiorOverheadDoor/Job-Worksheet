@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Measuring Worksheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap');
+
+  :root {
+    --primary: #1a2b4a;
+    --accent: #e8a020;
+    --light: #f4f6f9;
+    --border: #c8d0dc;
+    --text: #222;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #dde2ea;
+    color: var(--text);
+    padding: 20px;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .page {
+    background: white;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 30px 36px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    border-top: 6px solid var(--accent);
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+  }
+  .header-left h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 26px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .header-left p {
+    font-size: 12px;
+    color: #667;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .header-badge {
+    background: var(--primary);
+    color: var(--accent);
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+  }
+
+  /* JOB TYPE TABS */
+  .job-type-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .job-type-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .job-type-btn {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    background: white;
+    color: #556;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .job-type-btn:hover { border-color: var(--accent); color: var(--primary); }
+  .job-type-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--accent);
+  }
+
+  /* WO# + DATE BAR */
+  .wo-bar {
+    display: flex;
+    align-items: center;
+    background: var(--primary);
+    border-radius: 4px;
+    padding: 12px 20px;
+    gap: 0;
+    margin-bottom: 10px;
+  }
+  .wo-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+  .wo-bar-item label {
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wo-bar-item input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 3px;
+    color: white;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .wo-bar-item input:focus {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.16);
+  }
+  .wo-bar-item input::placeholder { color: rgba(255,255,255,0.35); }
+  .wo-bar-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 24px;
+    flex-shrink: 0;
+  }
+
+  /* CUSTOMER INFO CARD */
+  .job-info-card {
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 18px;
+    background: #f7f9fc;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .job-info-card .info-row label {
+    color: #556;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .job-info-card .info-row input {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    width: 100%;
+    padding: 6px 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .job-info-card .info-row input:focus {
+    border-color: var(--accent);
+    background: #fffdf6;
+  }
+  .info-row-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* SAVE AS PDF BUTTON */
+  .bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .save-pdf-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: white;
+    background: var(--primary);
+    border: none;
+    border-radius: 4px;
+    padding: 11px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    box-shadow: 0 2px 8px rgba(26,43,74,0.25);
+  }
+  .save-pdf-btn:hover { background: #0f1d36; }
+  @media print {
+    .bottom-actions { display: none; }
+  }
+
+  /* PHOTO SECTION */
+  .photo-section {
+    margin-bottom: 18px;
+  }
+  .photo-upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: white;
+    background: #2d6a4f;
+    border: none;
+    border-radius: 4px;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 10px;
+  }
+  .photo-upload-btn:hover { background: #245a42; }
+  .photo-upload-btn svg { flex-shrink: 0; }
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+  .photo-thumb {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #f0f2f5;
+    aspect-ratio: 1;
+  }
+  .photo-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-thumb .remove-photo {
+    position: absolute;
+    top: 3px; right: 3px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-thumb .remove-photo:hover { background: rgba(200,30,30,0.8); }
+  @media print {
+    .photo-upload-btn { display: none; }
+    .photo-thumb .remove-photo { display: none; }
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 18px; }
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white;
+    background: var(--primary);
+    padding: 5px 12px;
+    border-left: 4px solid var(--accent);
+    margin-bottom: 10px;
+  }
+
+  /* FIELDS GRID — always 2 columns, wraps cleanly */
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    padding: 0 4px;
+  }
+  .fields-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+  .fields-grid.one-col   { grid-template-columns: 1fr; }
+
+  .field-group { display: flex; flex-direction: column; }
+  .field-group label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #445;
+    margin-bottom: 3px;
+  }
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    background: var(--light);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .field-group input:focus,
+  .field-group select:focus,
+  .field-group textarea:focus {
+    border-color: var(--accent);
+    background: #fffdf6;
+  }
+  .field-group textarea { resize: none; height: 46px; }
+  .field-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 26px;
+    cursor: pointer;
+  }
+
+  /* DOOR BLOCK */
+  .door-block {
+    border: 1.5px solid #b0bdd0;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .door-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2d4270;
+    padding: 7px 14px;
+  }
+  .door-block-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .remove-door-btn {
+    font-size: 11px;
+    font-family: 'Source Sans 3', sans-serif;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #cdd;
+    padding: 3px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .remove-door-btn:hover { background: rgba(220,60,60,0.4); color: white; }
+  .door-block-body { padding: 12px 14px; }
+
+  /* ADD DOOR BUTTON */
+  .add-door-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--primary);
+    background: white;
+    border: 2px dashed #8a9bb8;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 18px;
+    transition: all 0.15s;
+  }
+  .add-door-btn:hover {
+    border-color: var(--accent);
+    background: #fffdf5;
+    color: var(--accent);
+  }
+  .add-door-btn .plus {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* NOTES AREA */
+  .notes-area {
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 12px;
+    background: #fffdf5;
+    min-height: 70px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    width: 100%;
+    outline: none;
+    resize: none;
+  }
+  .notes-area:focus { border-color: var(--accent); }
+
+  /* SIGNATURE ROW */
+  .sig-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 2px solid var(--primary);
+  }
+  .sig-row .field-group input {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    background: transparent;
+    padding-left: 0;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; padding: 20px 28px; }
+    .add-door-btn { display: none; }
+    .remove-door-btn { display: none; }
+    .bottom-actions { display: none; }
+    .photo-upload-btn { display: none; }
+    .photo-thumb .remove-photo { display: none; }
+    .field-group input, .field-group select, .field-group textarea {
+      background: white !important;
+      border-color: #aaa !important;
+    }
+    .job-info-left .info-row input { background: transparent !important; color: white !important; }
+    .job-info-right .info-row input { background: white !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Job Measuring Worksheet</h1>
+      <p>Garage Door Measurement &amp; Installation Form</p>
+    </div>
+    <div class="header-badge">Field Copy</div>
+  </div>
+
+  <!-- JOB TYPE TABS -->
+  <div class="job-type-row">
+    <span class="job-type-label">Job Type:</span>
+    <button class="job-type-btn" onclick="setJobType(this)">New Construction</button>
+    <button class="job-type-btn" onclick="setJobType(this)">Takedown &amp; Replace</button>
+    <button class="job-type-btn" onclick="setJobType(this)">Service / Repair</button>
+    <button class="job-type-btn" onclick="setJobType(this)">Opener Only</button>
+    <button class="job-type-btn" onclick="setJobType(this)">Springs Only</button>
+    <button class="job-type-btn" onclick="setJobType(this)">Other</button>
+  </div>
+
+  <!-- WO# AND DATE BAR -->
+  <div class="wo-bar">
+    <div class="wo-bar-item">
+      <label>Work Order #</label>
+      <input type="text" placeholder="WO-______">
+    </div>
+    <div class="wo-bar-divider"></div>
+    <div class="wo-bar-item">
+      <label>Date</label>
+      <input type="date" id="job-date">
+    </div>
+  </div>
+
+  <!-- CUSTOMER INFO CARD -->
+  <div class="job-info-card">
+    <div class="info-row">
+      <label>Customer Name</label>
+      <input type="text" placeholder="">
+    </div>
+    <div class="info-row">
+      <label>Address</label>
+      <input type="text" placeholder="">
+    </div>
+    <div class="info-row-split">
+      <div class="info-row">
+        <label>City / State / Zip</label>
+        <input type="text" placeholder="">
+      </div>
+      <div class="info-row">
+        <label>Phone</label>
+        <input type="text" placeholder="">
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH INFO -->
+  <div class="section">
+    <div class="section-title">&#9654; Tech Information</div>
+    <div class="fields-grid">
+      <div class="field-group">
+        <label>Tech Name</label>
+        <select>
+          <option value="">Select</option>
+          <option>Tech 1</option>
+          <option>Tech 2</option>
+          <option>Tech 3</option>
+          <option>Tech 4</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>How Many Doors</label>
+        <input type="number" min="1" max="10">
+      </div>
+    </div>
+  </div>
+
+  <!-- DOOR BLOCKS CONTAINER -->
+  <div id="door-blocks-container">
+    <!-- Door 1 is always present -->
+    <div class="door-block" id="door-1">
+      <div class="door-block-header">
+        <span class="door-block-title">Door 1</span>
+      </div>
+      <div class="door-block-body">
+
+        <!-- Door Details -->
+        <div class="section">
+          <div class="section-title">&#9654; Door Details</div>
+          <div class="fields-grid">
+            <div class="field-group">
+              <label>Door Model</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Color</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Glass / Insert (Location)</label>
+              <input type="text">
+            </div>
+          </div>
+        </div>
+
+        <!-- Opening Measurements -->
+        <div class="section">
+          <div class="section-title">&#9654; Opening Measurements</div>
+          <div class="fields-grid">
+            <div class="field-group">
+              <label>Opening Width</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Opening Height</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Head Room</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Floor to Bottom Track</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Between Concrete</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Floor / Reveal</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Back Room / Beam</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Pads (Check for Trim Stick In)</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Transom</label>
+              <select>
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Track & Hardware -->
+        <div class="section">
+          <div class="section-title">&#9654; Track &amp; Hardware</div>
+          <div class="fields-grid">
+            <div class="field-group">
+              <label>Type of Track</label>
+              <select>
+                <option value="">Select</option>
+                <option>Bracket</option>
+                <option>Reverse Angle</option>
+                <option>Full Angle</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Track Radius</label>
+              <select>
+                <option value="">Select</option>
+                <option>LHR</option>
+                <option>10"</option>
+                <option>12"</option>
+                <option>15"</option>
+                <option>20"</option>
+                <option>32"</option>
+                <option>HL</option>
+                <option>Full Vert</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Spring Type</label>
+              <select>
+                <option value="">Select</option>
+                <option>Extension</option>
+                <option>Torsion</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>What Are We Hanging To?</label>
+              <select>
+                <option value="">Select</option>
+                <option>Wood</option>
+                <option>Steel</option>
+                <option>Concrete</option>
+                <option>Sheetrock</option>
+                <option>Existing Hang</option>
+                <option>Buried Hang</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>High Lift Amount</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Lock</label>
+              <select>
+                <option value="">Select</option>
+                <option>Slide</option>
+                <option>Snap-latch</option>
+                <option>T-bar</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operator & Power -->
+        <div class="section">
+          <div class="section-title">&#9654; Operator &amp; Power</div>
+          <div class="fields-grid">
+            <div class="field-group">
+              <label>Operator Type &amp; Size</label>
+              <input type="text">
+            </div>
+            <div class="field-group">
+              <label>Power</label>
+              <select>
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Emergency Release</label>
+              <select>
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weatherseal & Trim -->
+        <div class="section">
+          <div class="section-title">&#9654; Weatherseal &amp; Trim</div>
+          <div class="fields-grid">
+            <div class="field-group">
+              <label>Weatherseal</label>
+              <select>
+                <option value="">Select</option>
+                <option>90°</option>
+                <option>45°</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Weatherseal Color</label>
+              <input type="text">
+            </div>
+          </div>
+        </div>
+
+        <!-- Obstructions -->
+        <div class="section" style="margin-bottom:0;">
+          <div class="section-title">&#9654; Obstructions</div>
+          <div class="fields-grid one-col">
+            <div class="field-group">
+              <input type="text" placeholder="Describe any obstructions in the opening or ceiling area">
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end door-block-body -->
+    </div><!-- end door-1 -->
+  </div><!-- end door-blocks-container -->
+
+  <!-- ADD ANOTHER DOOR BUTTON -->
+  <button class="add-door-btn" onclick="addDoor()">
+    <span class="plus">+</span> Add Another Door
+  </button>
+
+  <!-- PHOTO SECTION -->
+  <div class="section photo-section">
+    <div class="section-title">&#9654; Job Site Photos</div>
+    <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+    <button class="photo-upload-btn" onclick="document.getElementById('photo-input').click()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Add Photos
+    </button>
+    <div class="photo-grid" id="photo-grid"></div>
+  </div>
+
+  <!-- GENERAL NOTES -->
+  <div class="section">
+    <div class="section-title">&#9654; General Notes / Special Instructions</div>
+    <textarea class="notes-area" placeholder="Enter any additional notes, special instructions, or job-specific details here..."></textarea>
+  </div>
+
+  <!-- SIGNATURE ROW -->
+  <div class="sig-row">
+    <div class="field-group">
+      <label>Tech Signature</label>
+      <input type="text" placeholder="Sign here">
+    </div>
+    <div class="field-group">
+      <label>Customer Signature</label>
+      <input type="text" placeholder="Sign here">
+    </div>
+    <div class="field-group">
+      <label>Time Completed</label>
+      <input type="time">
+    </div>
+  </div><!-- end sig-row -->
+
+  <!-- BOTTOM ACTIONS -->
+  <div class="bottom-actions">
+    <button class="save-pdf-btn" onclick="window.print()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      Save as PDF
+    </button>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+  // Auto-populate today's date
+  document.getElementById('job-date').value = new Date().toISOString().split('T')[0];
+
+  let doorCount = 1;
+
+  function setJobType(btn) {
+    document.querySelectorAll('.job-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function addDoor() {
+    doorCount++;
+    const container = document.getElementById('door-blocks-container');
+    const block = document.createElement('div');
+    block.className = 'door-block';
+    block.id = 'door-' + doorCount;
+    block.innerHTML = `
+      <div class="door-block-header">
+        <span class="door-block-title">Door ${doorCount}</span>
+        <button class="remove-door-btn" onclick="removeDoor('door-${doorCount}')">Remove</button>
+      </div>
+      <div class="door-block-body">
+        <div class="section">
+          <div class="section-title">&#9654; Door Details</div>
+          <div class="fields-grid">
+            <div class="field-group"><label>Door Model</label><input type="text"></div>
+            <div class="field-group"><label>Color</label><input type="text"></div>
+            <div class="field-group"><label>Glass / Insert (Location)</label><input type="text"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">&#9654; Opening Measurements</div>
+          <div class="fields-grid">
+            <div class="field-group"><label>Opening Width</label><input type="text"></div>
+            <div class="field-group"><label>Opening Height</label><input type="text"></div>
+            <div class="field-group"><label>Head Room</label><input type="text"></div>
+            <div class="field-group"><label>Floor to Bottom Track</label><input type="text"></div>
+            <div class="field-group"><label>Between Concrete</label><input type="text"></div>
+            <div class="field-group"><label>Floor / Reveal</label><input type="text"></div>
+            <div class="field-group"><label>Back Room / Beam</label><input type="text"></div>
+            <div class="field-group"><label>Pads (Check for Trim Stick In)</label><input type="text"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">&#9654; Track &amp; Hardware</div>
+          <div class="fields-grid">
+            <div class="field-group"><label>Type of Track</label>
+              <select><option value="">Select</option><option>Bracket</option><option>Reverse Angle</option><option>Full Angle</option></select></div>
+            <div class="field-group"><label>Track Radius</label>
+              <select><option value="">Select</option><option>LHR</option><option>10"</option><option>12"</option><option>15"</option><option>20"</option><option>32"</option><option>HL</option><option>Full Vert</option></select></div>
+            <div class="field-group"><label>Spring Type</label>
+              <select><option value="">Select</option><option>Extension</option><option>Torsion</option></select></div>
+            <div class="field-group"><label>What Are We Hanging To?</label>
+              <select><option value="">Select</option><option>Wood</option><option>Steel</option><option>Concrete</option><option>Sheetrock</option><option>Existing Hang</option><option>Buried Hang</option></select></div>
+            <div class="field-group"><label>High Lift Amount</label><input type="text"></div>
+            <div class="field-group"><label>Lock</label>
+              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">&#9654; Operator &amp; Power</div>
+          <div class="fields-grid">
+            <div class="field-group"><label>Operator Type &amp; Size</label><input type="text"></div>
+            <div class="field-group"><label>Power</label>
+              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">&#9654; Weatherseal &amp; Trim</div>
+          <div class="fields-grid">
+            <div class="field-group"><label>Weatherseal</label>
+              <select><option value="">Select</option><option>90°</option><option>45°</option></select></div>
+            <div class="field-group"><label>Weatherseal Color</label><input type="text"></div>
+            <div class="field-group"><label>Transom</label>
+              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+          </div>
+        </div>
+        <div class="section" style="margin-bottom:0;">
+          <div class="section-title">&#9654; Obstructions</div>
+          <div class="fields-grid one-col">
+            <div class="field-group"><input type="text" placeholder="Describe any obstructions in the opening or ceiling area"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(block);
+    block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function handlePhotos(input) {
+    const grid = document.getElementById('photo-grid');
+    Array.from(input.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const thumb = document.createElement('div');
+        thumb.className = 'photo-thumb';
+        thumb.innerHTML = `
+          <img src="${e.target.result}" alt="Job photo">
+          <button class="remove-photo" onclick="this.parentElement.remove()" title="Remove">&#x2715;</button>
+        `;
+        grid.appendChild(thumb);
+      };
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+  }
+
+  function removeDoor(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+</script>
+</body>
+</html>
