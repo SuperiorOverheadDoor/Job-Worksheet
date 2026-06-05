@@ -38,11 +38,11 @@
   /* HEADER */
   .header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     border-bottom: 3px solid var(--primary);
-    padding-bottom: 14px;
-    margin-bottom: 20px;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
   }
   .header-left h1 {
     font-family: 'Oswald', sans-serif;
@@ -57,17 +57,33 @@
     margin-top: 2px;
     letter-spacing: 0.5px;
   }
-  .header-badge {
-    background: var(--primary);
-    color: var(--accent);
-    font-family: 'Oswald', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 3px;
+  .header-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
   }
+  .header-date-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+  }
+  .header-date-input {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    border: none;
+    border-bottom: 2px solid var(--accent);
+    background: transparent;
+    padding: 3px 4px;
+    outline: none;
+    text-align: right;
+  }
+  .header-date-input:focus { border-bottom-color: var(--primary); }
 
   /* JOB TYPE TABS */
   .job-type-row {
@@ -481,7 +497,10 @@
       <h1>Job Measuring Worksheet</h1>
       <p>Garage Door Measurement &amp; Installation Form</p>
     </div>
-    <div class="header-badge">Field Copy</div>
+    <div class="header-date">
+      <span class="header-date-label">Date</span>
+      <input type="date" id="job-date" class="header-date-input">
+    </div>
   </div>
 
   <!-- JOB TYPE TABS -->
@@ -495,16 +514,11 @@
     <button class="job-type-btn" onclick="setJobType(this)">Other</button>
   </div>
 
-  <!-- WO# AND DATE BAR -->
+  <!-- WO# BAR -->
   <div class="wo-bar">
     <div class="wo-bar-item">
       <label>Work Order #</label>
       <input type="text" placeholder="WO-______">
-    </div>
-    <div class="wo-bar-divider"></div>
-    <div class="wo-bar-item">
-      <label>Date</label>
-      <input type="date" id="job-date">
     </div>
   </div>
 
@@ -839,6 +853,8 @@
             <div class="field-group"><label>Floor / Reveal</label><input type="text"></div>
             <div class="field-group"><label>Back Room / Beam</label><input type="text"></div>
             <div class="field-group"><label>Pads (Check for Trim Stick In)</label><input type="text"></div>
+            <div class="field-group"><label>Transom</label>
+              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
           </div>
         </div>
         <div class="section">
@@ -854,7 +870,7 @@
               <select><option value="">Select</option><option>Wood</option><option>Steel</option><option>Concrete</option><option>Sheetrock</option><option>Existing Hang</option><option>Buried Hang</option></select></div>
             <div class="field-group"><label>High Lift Amount</label><input type="text"></div>
             <div class="field-group"><label>Lock</label>
-              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+              <select><option value="">Select</option><option>Slide</option><option>Snap-latch</option><option>T-bar</option></select></div>
           </div>
         </div>
         <div class="section">
@@ -862,6 +878,8 @@
           <div class="fields-grid">
             <div class="field-group"><label>Operator Type &amp; Size</label><input type="text"></div>
             <div class="field-group"><label>Power</label>
+              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+            <div class="field-group"><label>Emergency Release</label>
               <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
           </div>
         </div>
@@ -871,8 +889,6 @@
             <div class="field-group"><label>Weatherseal</label>
               <select><option value="">Select</option><option>90°</option><option>45°</option></select></div>
             <div class="field-group"><label>Weatherseal Color</label><input type="text"></div>
-            <div class="field-group"><label>Transom</label>
-              <select><option value="">Select</option><option>Yes</option><option>No</option></select></div>
           </div>
         </div>
         <div class="section" style="margin-bottom:0;">
